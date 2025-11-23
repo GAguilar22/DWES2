@@ -1,9 +1,14 @@
+<?php
+// Calculadora de edad
+// Este ejercicio pide una fecha de nacimiento en formato DD-MM-AAAA,
+// la valida y calcula la diferencia respecto a la fecha actual en años, días, horas, minutos y segundos.
+?>
 <!DOCTYPE html>
 <html lang="ca">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Activitat 4 - PHP</title>
+    <title>Activitat 1 - PHP</title>
 </head>
 <body>
 

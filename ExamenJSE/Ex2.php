@@ -1,3 +1,9 @@
+<?php
+// Contador de segmentos de display de 7 segmentos
+// Este ejercicio pide una hora en formato HH:MM:SS, la valida,
+// y cuenta cuántos segmentos se necesitan en total para mostrarla en un display de 7 segmentos.
+// Cada dígito (0-9) tiene un número específico de segmentos.
+?>
 <!DOCTYPE html>
 <html lang="ca">
 <head>

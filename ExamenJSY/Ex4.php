@@ -1,9 +1,14 @@
+<?php
+// Cifrado César
+// Este ejercicio implementa un cifrado César con desplazamiento de 5 posiciones.
+// Pide un mensaje en minúsculas y lo cifra usando el alfabeto catalán (incluye ç).
+?>
 <!DOCTYPE html>
 <html lang="ca">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Activitat 1 - PHP</title>
+    <title>Activitat 4 - PHP</title>
 </head>
 <body>
 

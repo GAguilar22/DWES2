@@ -1,9 +1,14 @@
+<?php
+// Tabla de seno y coseno
+// Este ejercicio genera una tabla con valores de x de 0 a 2 (incremento 0.01),
+// calcula sin(x) y cos(x), y muestra los valores positivos en azul y los negativos en rojo.
+?>
 <!DOCTYPE html>
 <html lang="ca">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Activitat 3 - PHP</title>
+    <title>Activitat 2 - PHP</title>
 </head>
 <body>
 

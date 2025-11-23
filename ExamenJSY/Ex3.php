@@ -1,9 +1,14 @@
+<?php
+// Calculadora de signo zodiacal
+// Este ejercicio pide una fecha de nacimiento en formato DD-MM-AAAA,
+// la valida y determina el signo del zodíaco correspondiente según el día y mes.
+?>
 <!DOCTYPE html>
 <html lang="ca">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Activitat 2 - PHP</title>
+    <title>Activitat 3 - PHP</title>
 </head>
 <body>
 

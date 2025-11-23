@@ -1,3 +1,9 @@
+<?php
+// Generador de número aleatorio con fondo de color
+// Este ejercicio genera un número aleatorio entre 1 y 100,
+// comprueba si es par o impar, y cambia el color de fondo de la página:
+// verde si es par, rojo si es impar.
+?>
 <!DOCTYPE html>
 <html lang="ca">
 <head>
