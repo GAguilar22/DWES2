@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('clients', function (Blueprint $table) {
+        Schema::create('registre_bizums', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->unique()->constrained()->onDelete('cascade');
-            $table->string('dni')->unique();
-            $table->date('data_naixement');
-            $table->string('telefon')->unique();
+            $table->foreignId('idCompteOrigen')->constrained('comptes');
+            $table->foreignId('idCompteDesti')->constrained('comptes');
+            $table->dateTime('dataBizum')->useCurrent();
+            $table->decimal('quantitat', 10, 2);
             $table->timestamps();
         });
     }
@@ -26,7 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('clients');
+        Schema::dropIfExists('registre_bizums');
     }
 };
-//Afegir relacions amb les altres taules

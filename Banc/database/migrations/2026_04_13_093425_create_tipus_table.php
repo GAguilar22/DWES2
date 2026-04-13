@@ -11,12 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('clients', function (Blueprint $table) {
+        Schema::create('tipus', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->unique()->constrained()->onDelete('cascade');
-            $table->string('dni')->unique();
-            $table->date('data_naixement');
-            $table->string('telefon')->unique();
+            $table->string('nom');
+            $table->string('descripcio')->nullable();
+            $table->string('imatge')->nullable();
             $table->timestamps();
         });
     }
@@ -26,7 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('clients');
+        Schema::dropIfExists('tipus');
     }
 };
-//Afegir relacions amb les altres taules

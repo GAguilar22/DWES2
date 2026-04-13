@@ -46,4 +46,12 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    /**
+     * Obtenir el client associat a aquest usuari (Relació 1:1).
+     */
+    public function client()
+    {
+        return $this->hasOne(Client::class);
+    }
 }

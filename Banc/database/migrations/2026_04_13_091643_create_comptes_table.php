@@ -11,12 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('clients', function (Blueprint $table) {
+        Schema::create('comptes', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->unique()->constrained()->onDelete('cascade');
-            $table->string('dni')->unique();
-            $table->date('data_naixement');
-            $table->string('telefon')->unique();
+            $table->foreignId('client_id')->constrained()->onDelete('cascade');
+            $table->foreignId('tipus_id')->constrained('tipus')->onDelete('restrict');
+            $table->string('iban')->unique();
+            $table->string('alias')->nullable();
+            $table->decimal('saldo', 10, 2)->default(0);
             $table->timestamps();
         });
     }
@@ -26,7 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('clients');
+        Schema::dropIfExists('comptes');
     }
 };
-//Afegir relacions amb les altres taules
