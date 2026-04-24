@@ -99,48 +99,45 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse ($compte->bizumsEnviats as $bizum)
+                                @forelse ($moviments as $bizum)
                                     <tr>
                                         <td style="font-size: 0.85rem; color: #6c757d;">{{ $bizum->dataBizum }}</td>
-                                        <td>
-                                            <span class="badge rounded-pill"
-                                                style="background-color: #fde8e8; color: #c0392b; font-size: 0.72rem;">
-                                                Enviat
-                                            </span>
-                                        </td>
-                                        <td style="font-size: 0.88rem;">{{ $bizum->compteDesti->client->user->name }}</td>
-                                        <td class="text-end fw-bold" style="font-size: 0.95rem; color: #c0392b;">
-                                            -{{ number_format($bizum->quantitat, 2) }} €
-                                        </td>
+                                        
+                                        @if($bizum->idCompteOrigen == $compte->id)
+                                            {{-- Bizum Enviat --}}
+                                            <td>
+                                                <span class="badge rounded-pill"
+                                                    style="background-color: #fde8e8; color: #c0392b; font-size: 0.72rem;">
+                                                    Enviat
+                                                </span>
+                                            </td>
+                                            <td style="font-size: 0.88rem;">{{ $bizum->compteDesti->client->user->name }}</td>
+                                            <td class="text-end fw-bold" style="font-size: 0.95rem; color: #c0392b;">
+                                                -{{ number_format($bizum->quantitat, 2) }} €
+                                            </td>
+                                        @else
+                                            {{-- Bizum Rebut --}}
+                                            <td>
+                                                <span class="badge rounded-pill"
+                                                    style="background-color: #e8f8f5; color: #1a7a5e; font-size: 0.72rem;">
+                                                    Rebut
+                                                </span>
+                                            </td>
+                                            <td style="font-size: 0.88rem;">{{ $bizum->compteOrigen->client->user->name }}</td>
+                                            <td class="text-end fw-bold" style="font-size: 0.95rem; color: #1a7a5e;">
+                                                +{{ number_format($bizum->quantitat, 2) }} €
+                                            </td>
+                                        @endif
                                     </tr>
                                 @empty
-                                @endforelse
-
-                                @forelse ($compte->bizumsRebuts as $bizum)
                                     <tr>
-                                        <td style="font-size: 0.85rem; color: #6c757d;">{{ $bizum->dataBizum }}</td>
-                                        <td>
-                                            <span class="badge rounded-pill"
-                                                style="background-color: #e8f8f5; color: #1a7a5e; font-size: 0.72rem;">
-                                                Rebut
-                                            </span>
-                                        </td>
-                                        <td style="font-size: 0.88rem;">{{ $bizum->compteOrigen->client->user->name }}</td>
-                                        <td class="text-end fw-bold" style="font-size: 0.95rem; color: #1a7a5e;">
-                                            +{{ number_format($bizum->quantitat, 2) }} €
+                                        <td colspan="4">
+                                            <div class="text-center py-4 text-muted">
+                                                <p class="mb-0">Encara no hi ha moviments en aquest compte.</p>
+                                            </div>
                                         </td>
                                     </tr>
-                                @empty
                                 @endforelse
-                            </tbody>
-                        </table>
-                    </div>
-
-                    @if($compte->bizumsEnviats->isEmpty() && $compte->bizumsRebuts->isEmpty())
-                        <div class="text-center py-4 text-muted">
-                            <p class="mb-0">Encara no hi ha moviments en aquest compte.</p>
-                        </div>
-                    @endif
 
                 </div>
             </div>

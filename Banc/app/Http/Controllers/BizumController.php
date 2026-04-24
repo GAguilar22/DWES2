@@ -41,29 +41,37 @@ class BizumController extends Controller
     {
         $request->validate([
             'idCompteOrigen' => 'required|exists:comptes,id',
-            'iban_desti'     => 'required|string',
+            'telefon_desti'  => 'required|string',
             'quantitat'      => 'required|numeric|min:0.01',
         ]);
 
         // Obtenim el compte origen
         $compteOrigen = Compte::findOrFail($request->idCompteOrigen);
 
-
         // Comprovem que hi ha saldo suficient
         if ($compteOrigen->saldo < $request->quantitat) {
             return back()->withErrors(['quantitat' => 'No tens saldo suficient per fer aquest Bizum.']);
         }
 
-        // Busquem el compte destí per IBAN
-        $compteDesti = Compte::where('iban', $request->iban_desti)->first();
+        // Busquem el client destinatari pel seu telèfon
+        $clientDesti = \App\Models\Client::where('telefon', $request->telefon_desti)->first();
 
-        if (!$compteDesti) {
-            return back()->withErrors(['iban_desti' => 'No s\'ha trobat cap compte amb aquest IBAN.']);
+        if (!$clientDesti) {
+            return back()->withErrors(['telefon_desti' => 'No s\'ha trobat cap client amb aquest telèfon.']);
         }
 
-        // No es pot fer un Bizum a un compte propi
-        if ($compteDesti->client_id === Auth::user()->client->id) {
-            return back()->withErrors(['iban_desti' => 'No pots fer un Bizum a un compte propi.']);
+        // No es pot fer un Bizum a un mateix client
+        if ($clientDesti->id === Auth::user()->client->id) {
+            return back()->withErrors(['telefon_desti' => 'No pots fer un Bizum a tu mateix.']);
+        }
+
+        // Busquem el compte CORRENT del client destinatari
+        $compteDesti = $clientDesti->comptes()->whereHas('tipus', function ($query) {
+            $query->where('nom', 'Corrent');
+        })->first();
+
+        if (!$compteDesti) {
+            return back()->withErrors(['telefon_desti' => 'El destinatari no té cap compte corrent per rebre el Bizum.']);
         }
 
         // Creem el registre del Bizum

@@ -50,13 +50,13 @@
                             @enderror
                         </div>
 
-                        {{-- IBAN destí --}}
+                        {{-- Telèfon destí --}}
                         <div class="mb-3">
-                            <label for="iban_desti" class="form-label fw-semibold">IBAN del destinatari</label>
-                            <input id="iban_desti" type="text"
-                                class="form-control @error('iban_desti') is-invalid @enderror" name="iban_desti"
-                                value="{{ old('iban_desti') }}" placeholder="ES00 0000 0000 0000 0000 0000" required>
-                            @error('iban_desti')
+                            <label for="telefon_desti" class="form-label fw-semibold">Telèfon del destinatari</label>
+                            <input id="telefon_desti" type="text"
+                                class="form-control @error('telefon_desti') is-invalid @enderror" name="telefon_desti"
+                                value="{{ old('telefon_desti') }}" placeholder="600000000" required>
+                            @error('telefon_desti')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>

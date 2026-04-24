@@ -42,9 +42,13 @@ class CompteController extends Controller
             abort(403);
         }
 
+        // Carreguem les relacions necessàries
         $compte->load('tipus', 'bizumsEnviats.compteDesti.client.user', 'bizumsRebuts.compteOrigen.client.user');
 
-        return view('client.show', compact('compte'));
+        // Ajuntem els bizums enviats i rebuts en una sola llista i els ordenem per data
+        $moviments = $compte->bizumsEnviats->concat($compte->bizumsRebuts)->sortByDesc('dataBizum');
+
+        return view('client.show', compact('compte', 'moviments'));
     }
 
     /**

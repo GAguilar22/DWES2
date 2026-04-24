@@ -14,17 +14,11 @@
             <ul class="navbar-nav ms-auto gap-2">
                 <li class="nav-item">
                     <a class="nav-link {{ Request::routeIs('client.index') ? 'fw-bold' : '' }}"
-                        href="{{ route('client.index') }}">Dades personals</a>
+                        href="{{ route('client.index') }}">Inici</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ Request::routeIs('compte.show') ? 'fw-bold' : '' }}"
-                        href="{{ route('client.index') }}">Comptes</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Crear compte</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Moviments</a>
+                    <a class="nav-link {{ Request::routeIs('bizum.create') ? 'fw-bold' : '' }}"
+                        href="{{ route('bizum.create') }}">Fer Bizum</a>
                 </li>
                 @auth
                     <li class="nav-item dropdown ms-2">

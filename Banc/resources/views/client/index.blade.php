@@ -66,9 +66,9 @@
                 <h6 class="text-uppercase fw-bold mb-3" style="letter-spacing: 1px; color: #0f3460;">
                     Comptes Bancaris
                 </h6>
-                <div class="row g-3 align-items-stretch">
+                <div class="row justify-content-center gap-4 align-items-stretch">
                     @forelse ($client->comptes as $compte)
-                        <div class="col-6 col-md-4">
+                        <div class="col-10 col-sm-6 col-md-5 col-lg-4">
                             <a href="{{ route('compte.show', $compte) }}" class="text-decoration-none">
                                 <div class="border rounded-3 p-3 text-center h-100 d-flex flex-column align-items-center justify-content-center"
                                     style="transition: box-shadow 0.2s; cursor: pointer;"
@@ -98,17 +98,7 @@
                         <div class="col text-center text-muted py-3">No tens cap compte bancari.</div>
                     @endforelse
 
-                    {{-- Botó crear compte --}}
-                    <div class="col-6 col-md-4">
-                        <a href="#" class="text-decoration-none d-flex flex-column align-items-center justify-content-center h-100
-                            border border-2 rounded-3 p-3 text-dark"
-                            style="border-style: dashed !important; transition: background 0.2s; min-height: 120px;"
-                            onmouseover="this.style.background='#f8f9fa'"
-                            onmouseout="this.style.background='transparent'">
-                            <div class="fw-bold mb-1" style="font-size: 1.8rem; line-height: 1;">＋</div>
-                            <p class="fw-bold text-uppercase mb-0 text-center" style="font-size: 0.75rem;">Crear compte</p>
-                        </a>
-                    </div>
+
                 </div>
             </div>
         </div>
@@ -174,64 +164,6 @@
     </div>
 </div>
 
-{{-- RESUM FINANCER --}}
-<div class="row mt-4 mb-5">
-    <div class="col-12">
-        <div class="card shadow" style="border: none; border-radius: 20px;
-            background: linear-gradient(135deg, #0f3460 0%, #16213e 60%, #1a1a2e 100%); color: white;">
-            <div class="card-body py-4 px-4">
-                <h6 class="text-uppercase fw-bold mb-4 text-center" style="letter-spacing: 2px; color: #5bc0be;">
-                    Resum Financer
-                </h6>
-                <div class="row g-3 text-center">
 
-                    {{-- Saldo Total --}}
-                    <div class="col-md-3">
-                        <div class="p-3 rounded-3 h-100"
-                            style="background: rgba(91,192,190,0.15); border: 1px solid rgba(91,192,190,0.4);">
-                            <div style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: #5bc0be;" class="mb-1">
-                                Saldo Total
-                            </div>
-                            <div class="fw-bold" style="font-size: 1.7rem;">
-                                {{ number_format($totalSaldo, 2) }} €
-                            </div>
-                            <div style="font-size: 0.7rem; color: rgba(255,255,255,0.4);">tots els comptes</div>
-                        </div>
-                    </div>
-
-                    {{-- Saldo per tipus --}}
-                    @foreach ($saldoPerTipus as $nom => $saldo)
-                        <div class="col-md-3">
-                            <div class="p-3 rounded-3 h-100"
-                                style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">
-                                <div style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.55);" class="mb-1">
-                                    {{ $nom }}
-                                </div>
-                                <div class="fw-bold" style="font-size: 1.2rem;">
-                                    {{ number_format($saldo, 2) }} €
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
-
-                    {{-- Número de comptes --}}
-                    <div class="col-md-3">
-                        <div class="p-3 rounded-3 h-100"
-                            style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">
-                            <div style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.55);" class="mb-1">
-                                Comptes Actius
-                            </div>
-                            <div class="fw-bold" style="font-size: 1.7rem;">
-                                {{ $client->comptes->count() }}
-                            </div>
-                            <div style="font-size: 0.7rem; color: rgba(255,255,255,0.4);">productes bancaris</div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
 @endsection
