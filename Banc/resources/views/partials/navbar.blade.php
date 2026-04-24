@@ -17,7 +17,8 @@
                         href="{{ route('client.index') }}">Dades personals</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Comptes</a>
+                    <a class="nav-link {{ Request::routeIs('compte.show') ? 'fw-bold' : '' }}"
+                        href="{{ route('client.index') }}">Comptes</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">Crear compte</a>

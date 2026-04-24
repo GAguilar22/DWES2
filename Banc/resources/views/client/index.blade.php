@@ -1,93 +1,237 @@
 @extends('layouts.master')
 
-@section('titulo', 'BANC IBC')
+@section('titulo', 'BANC IBC - Dashboard')
 
 @section('contenido')
+@if(session('success'))
+    <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+        <strong>✓</strong> {{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+@endif
 
-    {{-- ===================== COMPTES BANCÀRIES ===================== --}}
-    <div class="card shadow-sm mb-4 mt-4">
-        <div class="card-body">
-            <h5 class="text-center text-uppercase fw-bold mb-4">Comptes bancàries</h5>
-            <div class="row align-items-center">
+<div class="row mt-4 g-4">
 
-                {{-- Cards de comptes --}}
-                @forelse ($client->comptes as $compte)
-                    <div class="col-6 col-md-3 text-center mb-3">
-                        <div class="border rounded p-3 d-flex flex-column align-items-center">
-                            {{-- Placeholder imatge --}}
-                            <svg width="100" height="80" viewBox="0 0 100 80" class="mb-2" style="border:1px solid #ccc;">
-                                <line x1="0" y1="0" x2="100" y2="80" stroke="#ccc" />
-                                <line x1="100" y1="0" x2="0" y2="80" stroke="#ccc" />
-                                <rect width="100" height="80" fill="none" stroke="#ccc" />
-                            </svg>
-                            <p class="fw-bold text-uppercase mb-1" style="font-size: 0.8rem;">{{ $compte->tipus->nom }}</p>
-                            <p class="text-muted mb-1" style="font-size: 0.75rem;">{{ $compte->iban }}</p>
-                            <p class="fw-bold mb-0">{{ number_format($compte->saldo, 2) }} €</p>
-                        </div>
-                    </div>
-                @empty
-                    <div class="col text-center text-muted">No tens cap compte bancari.</div>
-                @endforelse
+    {{-- COLUMNA ESQUERRA: DADES PERSONALS --}}
+    <div class="col-lg-4">
+        <div class="card shadow-sm" style="border: none; border-radius: 16px; overflow: hidden;">
 
-                {{-- Botó crear compte nova --}}
-                <div class="col-6 col-md-3 text-center mb-3">
-                    <a href="#" class="text-decoration-none text-dark d-flex flex-column align-items-center">
-                        <div class="border border-2 rounded-circle d-flex align-items-center justify-content-center mb-2"
-                            style="width: 80px; height: 80px; font-size: 2rem; line-height: 1;">
-                            +
-                        </div>
-                        <p class="fw-bold text-uppercase mb-0" style="font-size: 0.8rem;">Crear<br>compte nova</p>
-                    </a>
+            <div class="text-white text-center py-4"
+                style="background: linear-gradient(135deg, #0f3460 0%, #16213e 100%);">
+                <div class="rounded-circle bg-white text-dark d-flex align-items-center justify-content-center mx-auto mb-3"
+                    style="width: 72px; height: 72px; font-size: 1.8rem; font-weight: bold;">
+                    {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
                 </div>
+                <h5 class="fw-bold mb-0">{{ Auth::user()->name }}</h5>
+                <small style="color: rgba(255,255,255,0.65);">Client BANC IBC</small>
+            </div>
 
+            <div class="card-body px-4 py-3">
+                <ul class="list-unstyled mb-0">
+                    <li class="d-flex align-items-center py-2 border-bottom">
+                        <div>
+                            <div class="text-muted" style="font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.5px;">DNI</div>
+                            <div class="fw-semibold">{{ $client->dni }}</div>
+                        </div>
+                    </li>
+                    <li class="d-flex align-items-center py-2 border-bottom">
+                        <div>
+                            <div class="text-muted" style="font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.5px;">Telèfon</div>
+                            <div class="fw-semibold">{{ $client->telefon }}</div>
+                        </div>
+                    </li>
+                    <li class="d-flex align-items-center py-2 border-bottom">
+                        <div>
+                            <div class="text-muted" style="font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.5px;">Data de Naixement</div>
+                            <div class="fw-semibold">{{ $client->data_naixement }}</div>
+                        </div>
+                    </li>
+                    <li class="d-flex align-items-center py-2">
+                        <div>
+                            <div class="text-muted" style="font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.5px;">Correu electrònic</div>
+                            <div class="fw-semibold" style="word-break: break-all;">{{ Auth::user()->email }}</div>
+                        </div>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>
 
-    {{-- ===================== ÚLTIMS MOVIMENTS ===================== --}}
-    <div class="card shadow-sm mb-4">
-        <div class="card-body">
-            <h5 class="text-center text-uppercase fw-bold mb-4">Últims moviments</h5>
-            <div class="row">
-                <div class="col-md-10">
+    {{-- COLUMNA DRETA --}}
+    <div class="col-lg-8 d-flex flex-column gap-4">
 
-                    Llista de moviments
-                    @php $moviments = [1, 2, 3, 4]; @endphp
-                    @foreach ($moviments as $mov)
-                        <div class="d-flex align-items-center justify-content-between border rounded px-3 py-2 mb-2">
-                            <span class="text-muted" style="font-size: 0.85rem;"> moviment {{ $mov }}</span>
-                            <a href="#" class="btn btn-sm text-white" style="background-color: #5bc0be; font-size: 0.75rem;">
-                                Veure detall
+        {{-- COMPTES BANCARIS --}}
+        <div class="card shadow-sm" style="border: none; border-radius: 16px;">
+            <div class="card-body px-4 py-3">
+                <h6 class="text-uppercase fw-bold mb-3" style="letter-spacing: 1px; color: #0f3460;">
+                    Comptes Bancaris
+                </h6>
+                <div class="row g-3 align-items-stretch">
+                    @forelse ($client->comptes as $compte)
+                        <div class="col-6 col-md-4">
+                            <a href="{{ route('compte.show', $compte) }}" class="text-decoration-none">
+                                <div class="border rounded-3 p-3 text-center h-100 d-flex flex-column align-items-center justify-content-center"
+                                    style="transition: box-shadow 0.2s; cursor: pointer;"
+                                    onmouseover="this.style.boxShadow='0 4px 16px rgba(15,52,96,0.15)'"
+                                    onmouseout="this.style.boxShadow='none'">
+                                    <div class="rounded-circle mb-2 d-flex align-items-center justify-content-center text-white"
+                                        style="width: 48px; height: 48px; background: linear-gradient(135deg, #0f3460, #5bc0be); font-size: 1.3rem;">
+                                        💳
+                                    </div>
+                                    <p class="fw-bold text-uppercase mb-1 text-dark" style="font-size: 0.75rem;">
+                                        @if($compte->alias)
+                                            {{ $compte->alias }}
+                                        @else
+                                            {{ $compte->tipus->nom }}
+                                        @endif
+                                    </p>
+                                    <p class="text-muted mb-1" style="font-size: 0.68rem; word-break: break-all;">
+                                        {{ wordwrap($compte->iban, 8, ' ', true) }}
+                                    </p>
+                                    <p class="fw-bold mb-0" style="color: #0f3460; font-size: 1rem;">
+                                        {{ number_format($compte->saldo, 2) }} €
+                                    </p>
+                                </div>
                             </a>
+                        </div>
+                    @empty
+                        <div class="col text-center text-muted py-3">No tens cap compte bancari.</div>
+                    @endforelse
+
+                    {{-- Botó crear compte --}}
+                    <div class="col-6 col-md-4">
+                        <a href="#" class="text-decoration-none d-flex flex-column align-items-center justify-content-center h-100
+                            border border-2 rounded-3 p-3 text-dark"
+                            style="border-style: dashed !important; transition: background 0.2s; min-height: 120px;"
+                            onmouseover="this.style.background='#f8f9fa'"
+                            onmouseout="this.style.background='transparent'">
+                            <div class="fw-bold mb-1" style="font-size: 1.8rem; line-height: 1;">＋</div>
+                            <p class="fw-bold text-uppercase mb-0 text-center" style="font-size: 0.75rem;">Crear compte</p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- ÚLTIMS MOVIMENTS --}}
+        <div class="card shadow-sm" style="border: none; border-radius: 16px;">
+            <div class="card-body px-4 py-3">
+                <h6 class="text-uppercase fw-bold mb-3" style="letter-spacing: 1px; color: #0f3460;">
+                    Últims Moviments
+                </h6>
+                <div class="row">
+                    <div class="col-md-10">
+                        @forelse ($moviments as $mov)
+                            <div class="d-flex align-items-center justify-content-between border rounded-3 px-3 py-2 mb-2">
+                                <div class="d-flex align-items-center gap-2">
+                                    @if(in_array($mov->idCompteOrigen, $compteIds))
+                                        <span class="badge rounded-pill" style="background-color: #fde8e8; color: #c0392b; font-size: 0.7rem;">Enviat</span>
+                                        <span style="font-size: 0.85rem;">{{ $mov->compteDesti->client->user->name }}</span>
+                                    @else
+                                        <span class="badge rounded-pill" style="background-color: #e8f8f5; color: #1a7a5e; font-size: 0.7rem;">Rebut</span>
+                                        <span style="font-size: 0.85rem;">{{ $mov->compteOrigen->client->user->name }}</span>
+                                    @endif
+                                    <span class="text-muted" style="font-size: 0.75rem;">{{ $mov->dataBizum }}</span>
+                                </div>
+                                @if(in_array($mov->idCompteOrigen, $compteIds))
+                                    <span class="fw-bold" style="font-size: 0.9rem; color: #c0392b;">
+                                        -{{ number_format($mov->quantitat, 2) }} €
+                                    </span>
+                                @else
+                                    <span class="fw-bold" style="font-size: 0.9rem; color: #1a7a5e;">
+                                        +{{ number_format($mov->quantitat, 2) }} €
+                                    </span>
+                                @endif
+                            </div>
+                        @empty
+                            <p class="text-muted text-center py-3" style="font-size: 0.85rem;">Encara no hi ha moviments.</p>
+                        @endforelse
+
+                        {{-- Paginació Bootstrap --}}
+                        <div class="mt-2">
+                            {{ $moviments->links() }}
+                        </div>
+                    </div>
+
+                    {{-- Botó FER BIZUM --}}
+                    <div class="col-md-2 d-flex flex-column align-items-center justify-content-center">
+                        <a href="{{ route('bizum.create') }}" class="text-decoration-none text-dark text-center">
+                            <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-1 text-white"
+                                style="width: 56px; height: 56px; background: linear-gradient(135deg, #0f3460, #5bc0be);">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M13 5l7 7-7 7M5 12h15" />
+                                </svg>
+                            </div>
+                            <p class="fw-bold text-uppercase mb-0" style="font-size: 0.72rem; letter-spacing: 0.5px;">Fer Bizum</p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{{-- RESUM FINANCER --}}
+<div class="row mt-4 mb-5">
+    <div class="col-12">
+        <div class="card shadow" style="border: none; border-radius: 20px;
+            background: linear-gradient(135deg, #0f3460 0%, #16213e 60%, #1a1a2e 100%); color: white;">
+            <div class="card-body py-4 px-4">
+                <h6 class="text-uppercase fw-bold mb-4 text-center" style="letter-spacing: 2px; color: #5bc0be;">
+                    Resum Financer
+                </h6>
+                <div class="row g-3 text-center">
+
+                    {{-- Saldo Total --}}
+                    <div class="col-md-3">
+                        <div class="p-3 rounded-3 h-100"
+                            style="background: rgba(91,192,190,0.15); border: 1px solid rgba(91,192,190,0.4);">
+                            <div style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: #5bc0be;" class="mb-1">
+                                Saldo Total
+                            </div>
+                            <div class="fw-bold" style="font-size: 1.7rem;">
+                                {{ number_format($totalSaldo, 2) }} €
+                            </div>
+                            <div style="font-size: 0.7rem; color: rgba(255,255,255,0.4);">tots els comptes</div>
+                        </div>
+                    </div>
+
+                    {{-- Saldo per tipus --}}
+                    @foreach ($saldoPerTipus as $nom => $saldo)
+                        <div class="col-md-3">
+                            <div class="p-3 rounded-3 h-100"
+                                style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">
+                                <div style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.55);" class="mb-1">
+                                    {{ $nom }}
+                                </div>
+                                <div class="fw-bold" style="font-size: 1.2rem;">
+                                    {{ number_format($saldo, 2) }} €
+                                </div>
+                            </div>
                         </div>
                     @endforeach
 
-                    {{-- Paginació --}}
-                    <div class="d-flex justify-content-center mt-3 gap-1">
-                        @foreach([1, 2, 3, 4, 5, 6, 7, 8] as $page)
-                            <a href="#" class="btn btn-sm {{ $page === 1 ? 'text-white' : 'btn-outline-secondary' }}"
-                                style="{{ $page === 1 ? 'background-color: #5bc0be;' : '' }} font-size: 0.75rem; min-width: 30px;">
-                                {{ $page }}
-                            </a>
-                        @endforeach
+                    {{-- Número de comptes --}}
+                    <div class="col-md-3">
+                        <div class="p-3 rounded-3 h-100"
+                            style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">
+                            <div style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.55);" class="mb-1">
+                                Comptes Actius
+                            </div>
+                            <div class="fw-bold" style="font-size: 1.7rem;">
+                                {{ $client->comptes->count() }}
+                            </div>
+                            <div style="font-size: 0.7rem; color: rgba(255,255,255,0.4);">productes bancaris</div>
+                        </div>
                     </div>
 
                 </div>
-
-                {{-- Botó FER BIZUM --}}
-                <div class="col-md-2 d-flex flex-column align-items-center justify-content-center">
-                    <a href="#" class="text-decoration-none text-dark text-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor" class="mb-1">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                d="M13 5l7 7-7 7M5 12h15" />
-                        </svg>
-                        <p class="fw-bold text-uppercase mb-0" style="font-size: 0.8rem;">Fer Bizum</p>
-                    </a>
-                </div>
-
             </div>
         </div>
     </div>
+</div>
 
 @endsection

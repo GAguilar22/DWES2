@@ -1,11 +1,13 @@
 <?php
 
+use App\Http\Controllers\BizumController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\CompteController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login');
 });
 
 Route::get('/dashboard', function () {
@@ -19,6 +21,13 @@ Route::middleware('auth')->group(function () {
 
     // Rutes del client
     Route::get('/client', [ClientController::class, 'index'])->name('client.index');
+
+    // Rutes dels comptes
+    Route::get('/compte/{compte}', [CompteController::class, 'show'])->name('compte.show');
+
+    // Rutes del Bizum
+    Route::get('/bizum/create', [BizumController::class, 'create'])->name('bizum.create');
+    Route::post('/bizum', [BizumController::class, 'store'])->name('bizum.store');
 });
 
 require __DIR__ . '/auth.php';

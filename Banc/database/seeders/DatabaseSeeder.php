@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Client;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -26,19 +25,10 @@ class DatabaseSeeder extends Seeder
         $user->password = bcrypt('admin1234');
         $user->save();
 
-        // --- Client de proves ---
-        $user = new User();
-        $user->name = 'Gerard Aguilar';
-        $user->email = 'gerard@banc.cat';
-        $user->password = bcrypt('gerard1234');
-        $user->save();
+        // --- Clients de proves (Gerard i Eduard) ---
+        $this->call(ClientsSeeder::class);
 
-        // Creem el Client associat a l'usuari de proves
-        $client = new Client();
-        $client->user_id = $user->id;
-        $client->dni = '12345678A';
-        $client->data_naixement = '1996-09-09';
-        $client->telefon = '610 10 10 10';
-        $client->save();
+        // --- Moviments de proves (Bizums entre clients) ---
+        $this->call(MovimentsSeeder::class);
     }
 }

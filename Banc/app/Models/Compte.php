@@ -29,4 +29,20 @@ class Compte extends Model
     {
         return $this->belongsTo(Tipus::class);
     }
+
+    /**
+     * Bizums enviats des d'aquest compte (Relació 1:N).
+     */
+    public function bizumsEnviats()
+    {
+        return $this->hasMany(RegistreBizum::class, 'idCompteOrigen');
+    }
+
+    /**
+     * Bizums rebuts en aquest compte (Relació 1:N).
+     */
+    public function bizumsRebuts()
+    {
+        return $this->hasMany(RegistreBizum::class, 'idCompteDesti');
+    }
 }

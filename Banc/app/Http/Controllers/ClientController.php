@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Models\RegistreBizum;
 use Illuminate\Support\Facades\Auth;
 
 class ClientController extends Controller
@@ -14,8 +14,33 @@ class ClientController extends Controller
     public function index()
     {
         $client = Auth::user()->client;
+        $client->load('comptes.tipus');
 
-        return view('client.index', compact('client'));
+        $totalSaldo = $client->comptes->sum('saldo');
+
+        $saldoPerTipus = [];
+        foreach ($client->comptes as $compte) {
+            $nom = $compte->tipus->nom;
+            if (!isset($saldoPerTipus[$nom])) {
+                $saldoPerTipus[$nom] = 0;
+            }
+            $saldoPerTipus[$nom] += $compte->saldo;
+        }
+
+        // IDs dels comptes del client
+        $compteIds = [];
+        foreach ($client->comptes as $compte) {
+            $compteIds[] = $compte->id;
+        }
+
+        // Últims bizums paginats (5 per pàgina)
+        $moviments = RegistreBizum::whereIn('idCompteOrigen', $compteIds)
+            ->orWhereIn('idCompteDesti', $compteIds)
+            ->with(['compteOrigen.client.user', 'compteDesti.client.user'])
+            ->orderBy('dataBizum', 'desc')
+            ->paginate(5);
+
+        return view('client.index', compact('client', 'totalSaldo', 'saldoPerTipus', 'compteIds', 'moviments'));
     }
 
     /**
