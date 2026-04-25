@@ -27,6 +27,8 @@ class AdminController extends Controller
         return view('admin.index', compact('clients', 'tipus', 'comptes', 'bizums', 'activeTab'));
     }
 
+
+
     /**
      * Mostrar el detall d'un client (vista de lectura per l'admin).
      */
