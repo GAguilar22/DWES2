@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('titulo', 'BANC IBC - Registre')
+@section('titulo', 'CaixaForta - Registre')
 
 @section('contenido')
 <div class="row justify-content-center mt-5">
@@ -9,7 +9,7 @@
 
             <div class="text-white text-center py-4"
                 style="background: linear-gradient(135deg, #0f3460 0%, #16213e 100%);">
-                <h4 class="fw-bold mb-0">BANC IBC</h4>
+                <h4 class="fw-bold mb-0">CaixaForta</h4>
                 <small style="color: rgba(255,255,255,0.65);">Crea el teu compte</small>
             </div>
 

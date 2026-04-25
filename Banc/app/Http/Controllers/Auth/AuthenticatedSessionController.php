@@ -28,6 +28,11 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+        // Si és l'administrador, redirigim a les vistes admin
+        if (Auth::user()->email === 'admin@admin.cat') {
+            return redirect()->route('admin.index');
+        }
+
         return redirect()->intended(route('client.index', absolute: false));
     }
 

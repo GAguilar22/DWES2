@@ -1,8 +1,11 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm">
     <div class="container-fluid px-4">
-        <a class="navbar-brand fw-bold fs-4 border border-2 border-dark px-3 py-1" href="{{ route('client.index') }}"
-            style="color: black; letter-spacing: 1px;">
-            BANC Gerard
+        <a class="navbar-brand text-decoration-none d-flex align-items-center gap-2" href="{{ route('client.index') }}">
+            <div class="rounded-circle d-flex align-items-center justify-content-center"
+                style="width: 38px; height: 38px; background: linear-gradient(135deg, #0f3460, #16213e); font-size: 1.1rem;">
+                🔐
+            </div>
+            <span class="fw-bold" style="color: #0f3460; letter-spacing: 1px; font-size: 1.2rem;">CaixaForta</span>
         </a>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
@@ -16,10 +19,14 @@
                     <a class="nav-link {{ Request::routeIs('client.index') ? 'fw-bold' : '' }}"
                         href="{{ route('client.index') }}">Inici</a>
                 </li>
+                @auth
+                @if(Auth::user()->email !== 'admin@admin.cat')
                 <li class="nav-item">
                     <a class="nav-link {{ Request::routeIs('bizum.create') ? 'fw-bold' : '' }}"
                         href="{{ route('bizum.create') }}">Fer Bizum</a>
                 </li>
+                @endif
+                @endauth
                 @auth
                     <li class="nav-item dropdown ms-2">
                         <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"

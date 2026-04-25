@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('titulo', 'BANC IBC - Dashboard')
+@section('titulo', 'CaixaForta - Dashboard')
 
 @section('contenido')
 @if(session('success'))
@@ -23,7 +23,7 @@
                     {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
                 </div>
                 <h5 class="fw-bold mb-0">{{ Auth::user()->name }}</h5>
-                <small style="color: rgba(255,255,255,0.65);">Client BANC IBC</small>
+                <small style="color: rgba(255,255,255,0.65);">Client CaixaForta</small>
             </div>
 
             <div class="card-body px-4 py-3">

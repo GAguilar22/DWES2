@@ -15,6 +15,10 @@ class RegistreBizum extends Model
         'quantitat',
     ];
 
+    protected $casts = [
+        'dataBizum' => 'datetime',
+    ];
+
     /**
      * Obtenir el compte origen del bizum (Relació N:1).
      */

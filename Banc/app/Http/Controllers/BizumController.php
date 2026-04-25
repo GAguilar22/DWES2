@@ -17,13 +17,11 @@ class BizumController extends Controller
         $client = Auth::user()->client;
         $client->load('comptes.tipus');
 
-        // Obtenim els IDs dels comptes del client per poder filtrar els bizums
         $compteIds = [];
         foreach ($client->comptes as $compte) {
             $compteIds[] = $compte->id;
         }
 
-        // Recuperem els últims 10 bizums on un compte del client sigui origen o destí
         $ultimsBizums = RegistreBizum::with(['compteOrigen.client.user', 'compteDesti.client.user'])
             ->whereIn('idCompteOrigen', $compteIds)
             ->orWhereIn('idCompteDesti', $compteIds)
@@ -45,27 +43,22 @@ class BizumController extends Controller
             'quantitat'      => 'required|numeric|min:0.01',
         ]);
 
-        // Obtenim el compte origen
         $compteOrigen = Compte::findOrFail($request->idCompteOrigen);
 
-        // Comprovem que hi ha saldo suficient
         if ($compteOrigen->saldo < $request->quantitat) {
             return back()->withErrors(['quantitat' => 'No tens saldo suficient per fer aquest Bizum.']);
         }
 
-        // Busquem el client destinatari pel seu telèfon
         $clientDesti = \App\Models\Client::where('telefon', $request->telefon_desti)->first();
 
         if (!$clientDesti) {
             return back()->withErrors(['telefon_desti' => 'No s\'ha trobat cap client amb aquest telèfon.']);
         }
 
-        // No es pot fer un Bizum a un mateix client
         if ($clientDesti->id === Auth::user()->client->id) {
             return back()->withErrors(['telefon_desti' => 'No pots fer un Bizum a tu mateix.']);
         }
 
-        // Busquem el compte CORRENT del client destinatari
         $compteDesti = $clientDesti->comptes()->whereHas('tipus', function ($query) {
             $query->where('nom', 'Corrent');
         })->first();
@@ -74,7 +67,6 @@ class BizumController extends Controller
             return back()->withErrors(['telefon_desti' => 'El destinatari no té cap compte corrent per rebre el Bizum.']);
         }
 
-        // Creem el registre del Bizum
         RegistreBizum::create([
             'idCompteOrigen' => $compteOrigen->id,
             'idCompteDesti'  => $compteDesti->id,
@@ -82,7 +74,6 @@ class BizumController extends Controller
             'quantitat'      => $request->quantitat,
         ]);
 
-        // Actualitzem els saldos
         $compteOrigen->saldo = $compteOrigen->saldo - $request->quantitat;
         $compteOrigen->save();
 
@@ -90,5 +81,16 @@ class BizumController extends Controller
         $compteDesti->save();
 
         return redirect()->route('client.index')->with('success', 'Bizum enviat correctament!');
+    }
+
+    /**
+     * Esborrar un registre de Bizum.
+     */
+    public function destroy(string $id)
+    {
+        $bizum = RegistreBizum::findOrFail($id);
+        $bizum->delete();
+
+        return redirect()->route('admin.index')->with('success', 'Bizum esborrat correctament.');
     }
 }

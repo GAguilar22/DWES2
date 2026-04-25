@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Client;
 use App\Models\RegistreBizum;
 use Illuminate\Support\Facades\Auth;
 
@@ -13,6 +14,10 @@ class ClientController extends Controller
      */
     public function index()
     {
+        if (Auth::user()->email === 'admin@admin.cat') {
+            return redirect()->route('admin.index');
+        }
+
         $client = Auth::user()->client;
         $client->load('comptes.tipus');
 
@@ -27,13 +32,11 @@ class ClientController extends Controller
             $saldoPerTipus[$nom] += $compte->saldo;
         }
 
-        // IDs dels comptes del client
         $compteIds = [];
         foreach ($client->comptes as $compte) {
             $compteIds[] = $compte->id;
         }
 
-        // Últims bizums paginats (5 per pàgina)
         $moviments = RegistreBizum::whereIn('idCompteOrigen', $compteIds)
             ->orWhereIn('idCompteDesti', $compteIds)
             ->with(['compteOrigen.client.user', 'compteDesti.client.user'])
@@ -84,10 +87,33 @@ class ClientController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Esborrar un client i totes les seves dades.
      */
     public function destroy(string $id)
     {
-        //
+        $client = Client::findOrFail($id);
+        $client->load('comptes');
+
+        foreach ($client->comptes as $compte) {
+            if ($compte->saldo > 0) {
+                return redirect()->route('admin.index')
+                    ->with('error', "No es pot esborrar el client {$client->user->name} perquè té comptes amb saldo.");
+            }
+        }
+
+        $compteIds = $client->comptes->pluck('id')->toArray();
+
+        RegistreBizum::whereIn('idCompteOrigen', $compteIds)
+            ->orWhereIn('idCompteDesti', $compteIds)
+            ->delete();
+
+        $client->comptes()->delete();
+
+        $user = $client->user;
+
+        $client->delete();
+        $user->delete();
+
+        return redirect()->route('admin.index')->with('success', 'Client esborrat correctament.');
     }
 }

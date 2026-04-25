@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Compte;
+use App\Models\RegistreBizum;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class CompteController extends Controller
 {
@@ -37,11 +37,6 @@ class CompteController extends Controller
      */
     public function show(Compte $compte)
     {
-        // Seguretat: verificar que el compte pertany al client autenticat
-        if ($compte->client_id !== Auth::user()->client->id) {
-            abort(403);
-        }
-
         // Carreguem les relacions necessàries
         $compte->load('tipus', 'bizumsEnviats.compteDesti.client.user', 'bizumsRebuts.compteOrigen.client.user');
 
@@ -52,26 +47,41 @@ class CompteController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Compte $compte)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
+     * Actualitzar l'àlies d'un compte bancari.
      */
     public function update(Request $request, Compte $compte)
     {
-        //
+        $request->validate([
+            'alias' => 'nullable|string|max:50',
+        ]);
+
+        $compte->alias = $request->alias;
+        $compte->save();
+
+        return redirect()->route('compte.show', $compte)
+            ->with('success', 'Àlies actualitzat correctament!');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Esborrar un compte bancari.
      */
-    public function destroy(Compte $compte)
+    public function destroy(string $id)
     {
-        //
+        $compte = Compte::findOrFail($id);
+
+        // No es pot esborrar si el compte té saldo > 0
+        if ($compte->saldo > 0) {
+            return redirect()->route('admin.index')
+                ->with('error', "No es pot esborrar el compte perquè té saldo pendent.");
+        }
+
+        // Esborrem els bizums associats
+        RegistreBizum::where('idCompteOrigen', $compte->id)
+            ->orWhere('idCompteDesti', $compte->id)
+            ->delete();
+
+        $compte->delete();
+
+        return redirect()->route('admin.index')->with('success', 'Compte esborrat correctament.');
     }
 }

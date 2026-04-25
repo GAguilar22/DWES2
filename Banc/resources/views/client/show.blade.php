@@ -38,13 +38,18 @@
                         <li class="py-2 border-bottom">
                             <div class="text-muted"
                                 style="font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.5px;">Àlies</div>
-                            <div class="fw-semibold">
-                                @if($compte->alias)
-                                    {{ $compte->alias }}
-                                @else
-                                    —
-                                @endif
-                            </div>
+
+                            {{-- En lloc de crear tota una vista per modificar el camp, he decidit nomes fer editable aquest
+                            camp
+                            I utilitzar la funcio update per a guardar el nou alies del camp --}}
+
+                            <form action="{{ route('compte.update', $compte) }}" method="POST" class="d-flex gap-1 mt-1">
+                                @csrf
+                                @method('PATCH')
+                                <input type="text" name="alias" value="{{ $compte->alias }}"
+                                    class="form-control form-control-sm" placeholder="Nom del compte...">
+                                <button type="submit" class="btn btn-sm btn-success">guardar</button>
+                            </form>
                         </li>
                         <li class="py-2 border-bottom">
                             <div class="text-muted"
@@ -63,7 +68,7 @@
                     </ul>
 
                     <div class="mt-3">
-                    <a href="{{ route('bizum.create') }}" class="btn w-100 text-white fw-bold"
+                        <a href="{{ route('bizum.create') }}" class="btn w-100 text-white fw-bold"
                             style="background: linear-gradient(135deg, #0f3460, #5bc0be); border: none; border-radius: 10px;">
                             Fer Bizum
                         </a>
@@ -102,7 +107,7 @@
                                 @forelse ($moviments as $bizum)
                                     <tr>
                                         <td style="font-size: 0.85rem; color: #6c757d;">{{ $bizum->dataBizum }}</td>
-                                        
+
                                         @if($bizum->idCompteOrigen == $compte->id)
                                             {{-- Bizum Enviat --}}
                                             <td>
@@ -139,10 +144,10 @@
                                     </tr>
                                 @endforelse
 
+                    </div>
                 </div>
             </div>
-        </div>
 
-    </div>
+        </div>
 
 @endsection
